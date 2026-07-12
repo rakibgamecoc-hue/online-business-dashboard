@@ -10,9 +10,9 @@ import PathaoPayout from './pages/PathaoPayout';
 
 function App() {
   return (
-    <div className="flex min-h-screen bg-dark-800 text-gray-100">
+    <div className="min-h-screen bg-dark-800 text-gray-100 md:flex">
       <Sidebar />
-      <main className="flex-1 ml-64 p-8 overflow-y-auto">
+      <main className="flex-1 min-w-0 p-4 sm:p-6 md:ml-64 md:p-8 overflow-y-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/ads-expense" element={<AdsExpense />} />

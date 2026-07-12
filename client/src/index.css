@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  #root {
+    min-height: 100vh;
+  }
   * {
     scrollbar-width: thin;
     scrollbar-color: #475569 #0f172a;
