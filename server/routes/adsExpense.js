@@ -1,21 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const AdsExpense = require('../models/AdsExpense');
+const auth = require('../middleware/auth');
 
-// GET all ads expenses
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
-    const expenses = await AdsExpense.find().sort({ date: -1 });
+    const expenses = await AdsExpense.find({ user: req.user.id }).sort({ date: -1 });
     res.json(expenses);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// POST new ads expense
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    const expense = new AdsExpense(req.body);
+    const expense = new AdsExpense({ ...req.body, user: req.user.id });
     const saved = await expense.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -23,10 +22,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE ads expense
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
-    await AdsExpense.findByIdAndDelete(req.params.id);
+    const expense = await AdsExpense.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    if (!expense) return res.status(404).json({ message: 'Not found' });
     res.json({ message: 'Deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });

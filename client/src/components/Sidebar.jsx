@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiBarChart2, FiDollarSign, FiShoppingBag, FiPackage, FiTruck } from 'react-icons/fi';
+import { FiHome, FiBarChart2, FiDollarSign, FiShoppingBag, FiPackage, FiTruck, FiLogOut } from 'react-icons/fi';
 
 const investLinks = [
   { to: '/ads-expense', icon: FiBarChart2, label: 'Ads Expense' },
@@ -12,7 +12,7 @@ const earnLinks = [
   { to: '/pathao-payout', icon: FiTruck, label: 'Pathao Payout' },
 ];
 
-function Sidebar() {
+function Sidebar({ user, onLogout }) {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
       isActive
@@ -67,14 +67,24 @@ function Sidebar() {
 
       {/* User */}
       <div className="px-3 py-3 md:px-4 md:py-4 border-t border-dark-600/50">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-sm font-bold text-white shadow-lg">
-            O
+        <div className="flex items-center justify-between gap-3 px-3 py-2">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-sm font-bold text-white shadow-lg">
+              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-200">{user?.name || 'User'}</p>
+              <p className="text-xs text-gray-500">{user?.email || 'Administrator'}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-200">Owner</p>
-            <p className="text-xs text-gray-500">Administrator</p>
-          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-dark-700 hover:text-white"
+            title="Logout"
+          >
+            <FiLogOut className="text-lg" />
+          </button>
         </div>
       </div>
     </aside>

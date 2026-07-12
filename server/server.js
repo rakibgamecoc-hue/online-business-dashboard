@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/ads-expense', require('./routes/adsExpense'));
 app.use('/api/dollar-wallet', require('./routes/dollarWallet'));
 app.use('/api/product-sourcing', require('./routes/productSourcing'));
