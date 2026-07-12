@@ -25,9 +25,7 @@ function Sidebar({ user, onLogout }) {
       {/* Brand */}
       <div className="px-4 py-4 md:px-6 md:py-6 border-b border-dark-600/50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30">
-            <FiBarChart2 className="text-white text-lg" />
-          </div>
+          <img src="/logo.png" alt="BD Analytics Logo" className="w-10 h-10 object-cover rounded-xl shadow-lg shadow-cyan-500/30" />
           <div>
             <h1 className="text-lg font-bold text-white tracking-tight">BD Analytics</h1>
             <p className="text-xs text-gray-500">Business Dashboard</p>

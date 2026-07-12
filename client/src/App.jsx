@@ -41,7 +41,17 @@ function App() {
   }
 
   if (!user) {
-    return <Auth onAuthSuccess={setUser} />;
+    return (
+      <>
+        <Auth onAuthSuccess={setUser} />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
+          }}
+        />
+      </>
+    );
   }
 
   return (

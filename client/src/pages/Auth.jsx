@@ -59,15 +59,20 @@ function Auth({ onAuthSuccess }) {
     <div className="min-h-screen flex items-center justify-center bg-dark-800 px-4 py-10 text-gray-100">
       <div className="w-full max-w-md rounded-3xl border border-dark-600/60 bg-dark-900/80 p-6 shadow-2xl shadow-black/30 backdrop-blur">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600">
-            {mode === 'login' ? <FiLogIn className="text-xl text-white" /> : <FiUserPlus className="text-xl text-white" />}
-          </div>
+          <img src="/logo.png" alt="BD Analytics Logo" className="mx-auto mb-3 w-16 h-16 object-cover rounded-2xl shadow-lg" />
           <h2 className="text-2xl font-semibold text-white">
             {mode === 'login' ? 'Welcome back' : 'Create your account'}
           </h2>
           <p className="mt-2 text-sm text-gray-400">
-            {mode === 'login' ? 'Sign in to continue to your dashboard' : 'Register to access the dashboard'}
+            {mode === 'login' ? 'Sign in to continue to your dashboard.' : 'Register to access the dashboard.'}
           </p>
+          <div className="mt-3 bg-dark-700/50 rounded-lg p-3 text-xs text-left text-gray-300 border border-dark-600/50">
+            <span className="block mb-1 text-cyan-400 font-medium">Tips:</span>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>Use a valid email format (e.g., name@example.com).</li>
+              <li>Passwords must be at least 6 characters long.</li>
+            </ul>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
