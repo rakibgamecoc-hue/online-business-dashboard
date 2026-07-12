@@ -1,0 +1,12 @@
+{
+  "name": "bd-analytics-dashboard",
+  "version": "1.0.0",
+  "description": "Unified BD Analytics Dashboard MERN Stack App",
+  "main": "server/server.js",
+  "scripts": {
+    "install-all": "npm install --prefix client && npm install --prefix server",
+    "build-client": "npm run build --prefix client",
+    "build": "npm run install-all && npm run build-client",
+    "start": "node server/server.js"
+  }
+}
