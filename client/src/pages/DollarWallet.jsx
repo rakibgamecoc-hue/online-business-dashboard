@@ -160,9 +160,9 @@ function DollarWallet() {
                 entries.map((e) => (
                   <tr key={e._id}>
                     <td className="text-gray-300">{new Date(e.date).toLocaleDateString('en-GB')}</td>
-                    <td className="text-white font-semibold">৳{e.bdtSpent.toLocaleString()}</td>
-                    <td className="text-emerald-400 font-semibold">${e.usdReceived.toLocaleString()}</td>
-                    <td className="text-amber-400">৳{e.rate}</td>
+                    <td className="text-white font-semibold">৳{(e.totalBDT || 0).toLocaleString()}</td>
+                    <td className="text-emerald-400 font-semibold">${(e.amountUSD || 0).toLocaleString()}</td>
+                    <td className="text-amber-400">৳{e.rateBDT}</td>
                     <td>
                       <button onClick={() => handleDelete(e._id)} className="btn-danger flex items-center gap-1">
                         <FiTrash2 className="text-xs" /> Delete

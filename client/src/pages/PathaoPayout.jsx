@@ -34,7 +34,11 @@ function PathaoPayout() {
     if (!form.consignmentId.trim()) return toast.error('Please enter a consignment ID');
     if (!form.amountBDT || Number(form.amountBDT) <= 0) return toast.error('Please enter a valid amount');
     try {
-      addToQueue('/pathao-payout', { ...form, amountBDT: Number(form.amountBDT) });
+      addToQueue('/pathao-payout', {
+        date: form.payoutDate,
+        consignmentId: form.consignmentId.trim(),
+        amountBDT: Number(form.amountBDT),
+      });
       toast.success('Saved locally and queued for upload');
       setForm({ payoutDate: '', consignmentId: '', amountBDT: '', status: 'Paid' });
       setRefreshOnSync(true);
@@ -147,7 +151,7 @@ function PathaoPayout() {
                 ) : (
                   entries.map((e) => (
                     <tr key={e._id}>
-                      <td className="text-gray-300">{new Date(e.payoutDate).toLocaleDateString('en-GB')}</td>
+                      <td className="text-gray-300">{new Date(e.date).toLocaleDateString('en-GB')}</td>
                       <td><span className="text-xs bg-dark-600 text-gray-300 px-2 py-1 rounded-md font-mono">{e.consignmentId}</span></td>
                       <td className="text-white font-semibold">৳{e.amountBDT.toLocaleString()}</td>
                       <td>
