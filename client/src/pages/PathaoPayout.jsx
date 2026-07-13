@@ -2,32 +2,44 @@ import { useState, useEffect } from 'react';
 import API from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiTruck } from 'react-icons/fi';
+import { useUploadQueue } from '../context/UploadQueueContext';
 
 function PathaoPayout() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ payoutDate: '', consignmentId: '', amountBDT: '', status: 'Paid' });
   const [loading, setLoading] = useState(true);
   const [showHistory, setShowHistory] = useState(true);
+  const [refreshOnSync, setRefreshOnSync] = useState(false);
+  const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
     API.get('/pathao-payout')
       .then((res) => setEntries(res.data))
-      .catch(() => toast.error('Failed to load'))
+      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load — check your connection'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
 
+  useEffect(() => {
+    if (refreshOnSync && status === 'synced' && pendingCount === 0) {
+      fetchData();
+      setRefreshOnSync(false);
+    }
+  }, [refreshOnSync, status, pendingCount]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.payoutDate || !form.consignmentId || !form.amountBDT) return toast.error('Fill all fields');
+    if (!form.payoutDate) return toast.error('Please select a payout date');
+    if (!form.consignmentId.trim()) return toast.error('Please enter a consignment ID');
+    if (!form.amountBDT || Number(form.amountBDT) <= 0) return toast.error('Please enter a valid amount');
     try {
-      await API.post('/pathao-payout', { ...form, amountBDT: Number(form.amountBDT) });
-      toast.success('Pathao payout added!');
+      addToQueue('/pathao-payout', { ...form, amountBDT: Number(form.amountBDT) });
+      toast.success('Saved locally and queued for upload');
       setForm({ payoutDate: '', consignmentId: '', amountBDT: '', status: 'Paid' });
-      fetchData();
-    } catch {
-      toast.error('Failed to add');
+      setRefreshOnSync(true);
+    } catch (err) {
+      toast.error('Failed to queue entry locally');
     }
   };
 
@@ -36,8 +48,8 @@ function PathaoPayout() {
       await API.delete(`/pathao-payout/${id}`);
       toast.success('Deleted');
       fetchData();
-    } catch {
-      toast.error('Failed to delete');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete');
     }
   };
 

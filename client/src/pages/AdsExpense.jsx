@@ -2,31 +2,42 @@ import { useState, useEffect } from 'react';
 import API from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiBarChart2 } from 'react-icons/fi';
+import { useUploadQueue } from '../context/UploadQueueContext';
 
 function AdsExpense() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ date: '', platform: 'Meta', amountBDT: '' });
   const [loading, setLoading] = useState(true);
+  const [refreshOnSync, setRefreshOnSync] = useState(false);
+  const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
     API.get('/ads-expense')
       .then((res) => setEntries(res.data))
-      .catch(() => toast.error('Failed to load data'))
+      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load data — check your connection'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
 
+  useEffect(() => {
+    if (refreshOnSync && status === 'synced' && pendingCount === 0) {
+      fetchData();
+      setRefreshOnSync(false);
+    }
+  }, [refreshOnSync, status, pendingCount]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.date || !form.amountBDT) return toast.error('Fill all fields');
+    if (!form.date) return toast.error('Please select a date');
+    if (!form.amountBDT || Number(form.amountBDT) <= 0) return toast.error('Please enter a valid amount');
     try {
-      await API.post('/ads-expense', { ...form, amountBDT: Number(form.amountBDT) });
-      toast.success('Ads expense added!');
+      addToQueue('/ads-expense', { ...form, amountBDT: Number(form.amountBDT) });
+      toast.success('Saved locally and queued for upload');
       setForm({ date: '', platform: 'Meta', amountBDT: '' });
-      fetchData();
-    } catch {
-      toast.error('Failed to add');
+      setRefreshOnSync(true);
+    } catch (err) {
+      toast.error('Failed to queue entry locally');
     }
   };
 
@@ -35,8 +46,8 @@ function AdsExpense() {
       await API.delete(`/ads-expense/${id}`);
       toast.success('Deleted');
       fetchData();
-    } catch {
-      toast.error('Failed to delete');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete');
     }
   };
 

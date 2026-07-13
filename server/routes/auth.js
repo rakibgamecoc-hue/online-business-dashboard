@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'No account found with this email. Please create a new account.' });
     }
 
     const isMatch = await user.comparePassword(password);

@@ -3,20 +3,30 @@ import API from '../api/axios';
 import toast from 'react-hot-toast';
 import Accordion from '../components/Accordion';
 import { FiPlus, FiTrash2, FiDollarSign } from 'react-icons/fi';
+import { useUploadQueue } from '../context/UploadQueueContext';
 
 function DollarWallet() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ date: '', bdtSpent: '', usdReceived: '', rate: '' });
   const [loading, setLoading] = useState(true);
+  const [refreshOnSync, setRefreshOnSync] = useState(false);
+  const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
     API.get('/dollar-wallet')
       .then((res) => setEntries(res.data))
-      .catch(() => toast.error('Failed to load'))
+      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load — check your connection'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
+
+  useEffect(() => {
+    if (refreshOnSync && status === 'synced' && pendingCount === 0) {
+      fetchData();
+      setRefreshOnSync(false);
+    }
+  }, [refreshOnSync, status, pendingCount]);
 
   const handleFormChange = (field, value) => {
     const updated = { ...form, [field]: value };
@@ -33,19 +43,24 @@ function DollarWallet() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.date || !form.bdtSpent || !form.usdReceived) return toast.error('Fill all fields');
+    if (!form.date) return toast.error('Please select a date');
+    if (!form.bdtSpent || Number(form.bdtSpent) <= 0) return toast.error('Please enter BDT Spent');
+    if (!form.usdReceived || Number(form.usdReceived) <= 0) return toast.error('Please enter USD Received');
+    const amountUSD = Number(form.usdReceived);
+    const totalBDT = Number(form.bdtSpent);
+    const rateBDT = amountUSD > 0 ? parseFloat((totalBDT / amountUSD).toFixed(2)) : 0;
     try {
-      await API.post('/dollar-wallet', {
+      addToQueue('/dollar-wallet', {
         date: form.date,
-        bdtSpent: Number(form.bdtSpent),
-        usdReceived: Number(form.usdReceived),
-        rate: Number(form.rate),
+        amountUSD,
+        totalBDT,
+        rateBDT,
       });
-      toast.success('Dollar wallet entry added!');
+      toast.success('Saved locally and queued for upload');
       setForm({ date: '', bdtSpent: '', usdReceived: '', rate: '' });
-      fetchData();
-    } catch {
-      toast.error('Failed to add');
+      setRefreshOnSync(true);
+    } catch (err) {
+      toast.error('Failed to queue entry locally');
     }
   };
 
@@ -54,13 +69,13 @@ function DollarWallet() {
       await API.delete(`/dollar-wallet/${id}`);
       toast.success('Deleted');
       fetchData();
-    } catch {
-      toast.error('Failed to delete');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete');
     }
   };
 
-  const totalBDT = entries.reduce((s, e) => s + e.bdtSpent, 0);
-  const totalUSD = entries.reduce((s, e) => s + e.usdReceived, 0);
+  const totalBDT = entries.reduce((s, e) => s + (e.totalBDT || 0), 0);
+  const totalUSD = entries.reduce((s, e) => s + (e.amountUSD || 0), 0);
   const avgRate = totalUSD > 0 ? (totalBDT / totalUSD).toFixed(2) : 0;
 
   return (

@@ -2,21 +2,31 @@ import { useState, useEffect } from 'react';
 import API from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiShoppingBag } from 'react-icons/fi';
+import { useUploadQueue } from '../context/UploadQueueContext';
 
 function ProductSourcing() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ date: '', productName: '', batchNumber: '', unitCost: '', packagingCost: '', totalBDT: '' });
   const [loading, setLoading] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
+  const [refreshOnSync, setRefreshOnSync] = useState(false);
+  const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
     API.get('/product-sourcing')
       .then((res) => setEntries(res.data))
-      .catch(() => toast.error('Failed to load'))
+      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load — check your connection'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
+
+  useEffect(() => {
+    if (refreshOnSync && status === 'synced' && pendingCount === 0) {
+      fetchData();
+      setRefreshOnSync(false);
+    }
+  }, [refreshOnSync, status, pendingCount]);
 
   const handleFormChange = (field, value) => {
     const updated = { ...form, [field]: value };
@@ -30,19 +40,21 @@ function ProductSourcing() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.date || !form.productName || !form.batchNumber || !form.totalBDT) return toast.error('Fill all fields');
+    if (!form.date) return toast.error('Please select a date');
+    if (!form.productName.trim()) return toast.error('Please enter product name');
+    if (!form.totalBDT || Number(form.totalBDT) <= 0) return toast.error('Please enter a valid cost');
     try {
-      await API.post('/product-sourcing', {
-        ...form,
-        unitCost: Number(form.unitCost),
-        packagingCost: Number(form.packagingCost),
-        totalBDT: Number(form.totalBDT),
+      addToQueue('/product-sourcing', {
+        date: form.date,
+        itemName: form.productName,
+        quantity: Number(form.batchNumber) || 1,
+        costBDT: Number(form.totalBDT),
       });
-      toast.success('Product sourcing entry added!');
+      toast.success('Saved locally and queued for upload');
       setForm({ date: '', productName: '', batchNumber: '', unitCost: '', packagingCost: '', totalBDT: '' });
-      fetchData();
-    } catch {
-      toast.error('Failed to add');
+      setRefreshOnSync(true);
+    } catch (err) {
+      toast.error('Failed to queue entry locally');
     }
   };
 

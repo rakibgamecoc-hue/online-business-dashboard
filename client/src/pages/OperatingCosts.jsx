@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import API from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiPackage } from 'react-icons/fi';
+import { useUploadQueue } from '../context/UploadQueueContext';
 
 const categoryColors = {
   'Poly Bags': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
@@ -15,26 +16,36 @@ function OperatingCosts() {
   const [form, setForm] = useState({ date: '', category: 'Poly Bags', description: '', amountBDT: '' });
   const [loading, setLoading] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
+  const [refreshOnSync, setRefreshOnSync] = useState(false);
+  const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
     API.get('/operating-costs')
       .then((res) => setEntries(res.data))
-      .catch(() => toast.error('Failed to load'))
+      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load — check your connection'))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => { fetchData(); }, []);
 
+  useEffect(() => {
+    if (refreshOnSync && status === 'synced' && pendingCount === 0) {
+      fetchData();
+      setRefreshOnSync(false);
+    }
+  }, [refreshOnSync, status, pendingCount]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.date || !form.amountBDT) return toast.error('Fill required fields');
+    if (!form.date) return toast.error('Please select a date');
+    if (!form.amountBDT || Number(form.amountBDT) <= 0) return toast.error('Please enter a valid amount');
     try {
-      await API.post('/operating-costs', { ...form, amountBDT: Number(form.amountBDT) });
-      toast.success('Operating cost added!');
+      addToQueue('/operating-costs', { ...form, amountBDT: Number(form.amountBDT) });
+      toast.success('Saved locally and queued for upload');
       setForm({ date: '', category: 'Poly Bags', description: '', amountBDT: '' });
-      fetchData();
-    } catch {
-      toast.error('Failed to add');
+      setRefreshOnSync(true);
+    } catch (err) {
+      toast.error('Failed to queue entry locally');
     }
   };
 
@@ -43,8 +54,8 @@ function OperatingCosts() {
       await API.delete(`/operating-costs/${id}`);
       toast.success('Deleted');
       fetchData();
-    } catch {
-      toast.error('Failed to delete');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to delete');
     }
   };
 
