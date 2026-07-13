@@ -189,14 +189,14 @@ function FabButton({ onEntryAdded }) {
 
       {/* Quick-add Panel */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center pb-20 sm:pb-0">
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
 
           {/* Panel */}
           <div
             ref={panelRef}
-            className="relative bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl shadow-2xl max-h-[85vh] overflow-y-auto animate-slide-up"
+            className="relative bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl shadow-2xl max-h-[70vh] overflow-y-auto animate-slide-up pb-16 sm:pb-8"
           >
             {/* Header */}
             <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b border-gray-200 rounded-t-2xl z-10">

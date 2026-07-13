@@ -11,6 +11,7 @@ import DollarWallet from './pages/DollarWallet';
 import ProductSourcing from './pages/ProductSourcing';
 import OperatingCosts from './pages/OperatingCosts';
 import PathaoPayout from './pages/PathaoPayout';
+import Account from './pages/Account';
 import Auth from './pages/Auth';
 import API from './api/axios';
 import { UploadQueueProvider } from './context/UploadQueueContext';
@@ -108,15 +109,27 @@ function App() {
         <div className="flex flex-col gap-4 p-4 sm:p-6 xl:p-8 pb-24 md:pb-6 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={() => setSidebarOpen((open) => !open)}
-                className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 shadow-sm"
-              >
-                {sidebarOpen ? <FiX className="w-4 h-4" /> : <FiMenu className="w-4 h-4" />}
-                <span>{sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}</span>
-              </button>
-              <UploadStatusBadge />
+                <button
+                  type="button"
+                  onClick={() => setSidebarOpen((open) => !open)}
+                  className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150 shadow-sm"
+                >
+                  {sidebarOpen ? <FiX className="w-4 h-4" /> : <FiMenu className="w-4 h-4" />}
+                  <span>{sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}</span>
+                </button>
+
+                {/* Mobile-only greeting shown on home/dashboard */}
+                {location.pathname === '/' && (
+                  <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold text-slate-900 bg-white border border-gray-200 shadow-sm sm:hidden">
+                    <span>{(() => {
+                      const hour = new Date().getHours();
+                      const when = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+                      return `${when}${user?.name ? ', ' + user.name.split(' ')[0] : ''}`;
+                    })()}</span>
+                  </div>
+                )}
+
+                <UploadStatusBadge user={user} />
             </div>
             <nav className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
               <Link to="/" className="hover:text-gray-900 font-medium">Home</Link>
@@ -142,6 +155,7 @@ function App() {
             <Route path="/product-sourcing" element={<ProductSourcing />} />
             <Route path="/operating-costs" element={<OperatingCosts />} />
             <Route path="/pathao-payout" element={<PathaoPayout />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
@@ -151,7 +165,7 @@ function App() {
       <FabButton />
 
       {/* Mobile bottom nav */}
-      <BottomNav />
+      <BottomNav user={user} />
 
       <Toaster
         position="top-right"
