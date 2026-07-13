@@ -85,8 +85,8 @@ function DollarWallet() {
           <FiDollarSign className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Dollar Wallet Tracker</h1>
-          <p className="text-sm text-gray-400">Track BDT to USD conversions for ad payments</p>
+          <h1 className="text-2xl font-bold text-slate-900">Dollar Wallet Tracker</h1>
+          <p className="text-sm text-slate-500">Track BDT to USD conversions for ad payments</p>
         </div>
       </div>
 
@@ -95,17 +95,17 @@ function DollarWallet() {
         <div className="glass-card p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 to-blue-600" />
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Total BDT Spent</p>
-          <p className="text-2xl font-bold text-white">৳{totalBDT.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-slate-900">৳{totalBDT.toLocaleString()}</p>
         </div>
         <div className="glass-card p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500 to-teal-600" />
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Total USD Received</p>
-          <p className="text-2xl font-bold text-white">${totalUSD.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-slate-900">${totalUSD.toLocaleString()}</p>
         </div>
         <div className="glass-card p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-500 to-orange-600" />
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Average Rate</p>
-          <p className="text-2xl font-bold text-white">৳{avgRate}/USD</p>
+          <p className="text-2xl font-bold text-slate-900">৳{avgRate}/USD</p>
         </div>
       </div>
 

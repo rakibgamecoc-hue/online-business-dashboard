@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiBarChart2, FiDollarSign, FiShoppingBag, FiPackage, FiTruck, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiBarChart2, FiDollarSign, FiShoppingBag, FiPackage, FiTruck, FiLogOut, FiX } from 'react-icons/fi';
 
 const navSections = [
   { label: null, links: [{ to: '/', icon: FiHome, label: 'Dashboard' }] },
@@ -18,7 +18,7 @@ const navSections = [
   },
 ];
 
-function Sidebar({ user, onLogout }) {
+function Sidebar({ user, onLogout, onClose, isOpen }) {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
       isActive
@@ -27,14 +27,24 @@ function Sidebar({ user, onLogout }) {
     }`;
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-white border-r border-gray-200 z-40">
+    <aside className={`hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col bg-white border-r border-gray-200 z-40 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-gray-200">
-        <img src="/logo.png" alt="BD Analytics" className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
-        <div className="min-w-0">
-          <p className="text-sm font-bold text-gray-900 truncate">BD Analytics</p>
-          <p className="text-xs text-gray-500">Business Dashboard</p>
+      <div className="flex items-center justify-between gap-3 px-5 py-5 border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="BD Analytics" className="w-9 h-9 rounded-lg object-cover flex-shrink-0" />
+          <div className="min-w-0">
+            <p className="text-sm font-bold text-gray-900 truncate">BD Analytics</p>
+            <p className="text-xs text-gray-500">Business Dashboard</p>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          title="Close sidebar"
+        >
+          <FiX className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Nav */}

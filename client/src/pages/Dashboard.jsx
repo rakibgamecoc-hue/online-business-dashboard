@@ -34,8 +34,8 @@ function Dashboard() {
           <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
           <span>Live Dashboard</span>
         </div>
-        <h1 className="text-3xl font-bold text-white mb-1">Command Center</h1>
-        <p className="text-gray-400">{dateStr}</p>
+        <h1 className="text-3xl font-bold text-slate-900 mb-1">Command Center</h1>
+        <p className="text-slate-600">{dateStr}</p>
       </div>
 
       {/* Summary Cards */}
@@ -54,7 +54,7 @@ function Dashboard() {
 
       {/* Quick Links */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Quick Navigation</h2>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">Quick Navigation</h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {quickLinks.map(({ to, icon: Icon, label, desc, gradient, shadow }) => (
@@ -69,8 +69,8 @@ function Dashboard() {
               </div>
               <FiArrowRight className="text-gray-600 group-hover:text-gray-300 group-hover:translate-x-1 transition-all duration-200" />
             </div>
-            <h3 className="text-white font-semibold mb-1">{label}</h3>
-            <p className="text-sm text-gray-400">{desc}</p>
+            <h3 className="text-slate-900 font-semibold mb-1">{label}</h3>
+            <p className="text-sm text-slate-500">{desc}</p>
           </Link>
         ))}
       </div>

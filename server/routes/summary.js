@@ -22,6 +22,8 @@ router.get('/', auth, async (req, res) => {
     const totalWalletDeposit = wallet.reduce((sum, item) => sum + item.totalBDT, 0);
     const totalOperatingCost = operating.reduce((sum, item) => sum + item.amountBDT, 0);
     const totalPayouts = payouts.reduce((sum, item) => sum + item.amountBDT, 0);
+    const totalPaid = payouts.filter((item) => item.status === 'Paid').reduce((sum, item) => sum + item.amountBDT, 0);
+    const totalPending = payouts.filter((item) => item.status !== 'Paid').reduce((sum, item) => sum + item.amountBDT, 0);
     const totalProductSourcing = products.reduce((sum, item) => sum + item.costBDT, 0);
 
     const totalExpenses = totalAdsExpense + totalOperatingCost + totalProductSourcing;
@@ -33,6 +35,8 @@ router.get('/', auth, async (req, res) => {
       totalWalletDeposit,
       totalOperatingCost,
       totalPayouts,
+      totalPaid,
+      totalPending,
       totalProductSourcing,
       totalExpenses,
       totalRevenue,

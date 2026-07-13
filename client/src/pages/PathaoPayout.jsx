@@ -67,8 +67,8 @@ function PathaoPayout() {
           <FiTruck className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Pathao Delivery Tracker</h1>
-          <p className="text-sm text-gray-400">Track courier payouts and delivery status</p>
+          <h1 className="text-2xl font-bold text-slate-900">Pathao Delivery Tracker</h1>
+          <p className="text-sm text-slate-500">Track courier payouts and delivery status</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ function PathaoPayout() {
         <div className="glass-card p-5 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 to-blue-600" />
           <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Total Revenue</p>
-          <p className="text-2xl font-bold text-white">৳{(totalPaid + totalPending).toLocaleString()}</p>
+          <p className="text-2xl font-bold text-slate-900">৳{(totalPaid + totalPending).toLocaleString()}</p>
         </div>
       </div>
 

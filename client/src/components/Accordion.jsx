@@ -11,7 +11,7 @@ function Accordion({ title, badge, children, defaultOpen = false }) {
         className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-dark-600/20 transition-colors duration-200"
       >
         <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
           {badge && (
             <span className="text-xs bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-full font-medium border border-cyan-500/30">
               {badge}

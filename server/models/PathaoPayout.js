@@ -5,6 +5,7 @@ const pathaoPayoutSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   amountBDT: { type: Number, required: true },
   consignmentId: { type: String },
+  status: { type: String, enum: ['Paid', 'Pending'], default: 'Paid' },
 }, { timestamps: true });
 
 module.exports = mongoose.model('PathaoPayout', pathaoPayoutSchema);

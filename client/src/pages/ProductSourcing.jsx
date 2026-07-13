@@ -8,14 +8,29 @@ function ProductSourcing() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ date: '', productName: '', batchNumber: '', unitCost: '', packagingCost: '', totalBDT: '' });
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [refreshOnSync, setRefreshOnSync] = useState(false);
   const { status, pendingCount, addToQueue } = useUploadQueue();
 
   const fetchData = () => {
+    setHasError(false);
     API.get('/product-sourcing')
-      .then((res) => setEntries(res.data))
-      .catch((err) => toast.error(err.response?.data?.message || 'Failed to load — check your connection'))
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setEntries(res.data);
+        } else {
+          console.error('Unexpected product sourcing response', res.data);
+          setEntries([]);
+          setHasError(true);
+          toast.error('Unexpected response while loading product sourcing data.');
+        }
+      })
+      .catch((err) => {
+        console.error('Product sourcing fetch failed', err);
+        setHasError(true);
+        toast.error(err.response?.data?.message || 'Failed to load — check your connection');
+      })
       .finally(() => setLoading(false));
   };
 
@@ -68,7 +83,8 @@ function ProductSourcing() {
     }
   };
 
-  const totalCost = entries.reduce((s, e) => s + e.totalBDT, 0);
+  const safeEntries = Array.isArray(entries) ? entries : [];
+  const totalCost = safeEntries.reduce((s, e) => s + (Number(e.costBDT) || 0), 0);
 
   return (
     <div className="animate-fade-in">
@@ -77,8 +93,8 @@ function ProductSourcing() {
           <FiShoppingBag className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Product Sourcing</h1>
-          <p className="text-sm text-gray-400">Track product costs, batches & packaging expenses</p>
+          <h1 className="text-2xl font-bold text-slate-900">Product Sourcing</h1>
+          <p className="text-sm text-slate-500">Track product costs, batches & packaging expenses</p>
         </div>
       </div>
 
@@ -152,17 +168,19 @@ function ProductSourcing() {
               <tbody>
                 {loading ? (
                   <tr><td colSpan="7" className="text-center py-8 text-gray-500">Loading...</td></tr>
-                ) : entries.length === 0 ? (
+                ) : hasError ? (
+                  <tr><td colSpan="7" className="text-center py-8 text-red-500">Unable to load entries. Please refresh.</td></tr>
+                ) : safeEntries.length === 0 ? (
                   <tr><td colSpan="7" className="text-center py-8 text-gray-500">No entries yet.</td></tr>
                 ) : (
-                  entries.map((e) => (
-                    <tr key={e._id}>
-                      <td className="text-gray-300">{new Date(e.date).toLocaleDateString('en-GB')}</td>
-                      <td className="text-white font-medium">{e.productName}</td>
+                  safeEntries.map((e) => (
+                    <tr key={e._id || e.id || `${e.date}-${e.itemName}` }>
+                      <td className="text-slate-700">{new Date(e.date).toLocaleDateString('en-GB')}</td>
+                      <td className="text-slate-900 font-medium">{e.productName}</td>
                       <td><span className="text-xs bg-dark-600 text-gray-300 px-2 py-1 rounded-md font-mono">{e.batchNumber}</span></td>
-                      <td className="text-gray-300">৳{e.unitCost.toLocaleString()}</td>
-                      <td className="text-gray-300">৳{e.packagingCost.toLocaleString()}</td>
-                      <td className="text-amber-400 font-semibold">৳{e.totalBDT.toLocaleString()}</td>
+                      <td className="text-gray-300">৳{Number(e.unitCost || 0).toLocaleString()}</td>
+                      <td className="text-gray-300">৳{Number(e.packagingCost || 0).toLocaleString()}</td>
+                      <td className="text-amber-400 font-semibold">৳{Number(e.costBDT || 0).toLocaleString()}</td>
                       <td>
                         <button onClick={() => handleDelete(e._id)} className="btn-danger flex items-center gap-1">
                           <FiTrash2 className="text-xs" /> Delete

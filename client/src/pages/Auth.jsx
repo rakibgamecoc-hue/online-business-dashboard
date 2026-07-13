@@ -76,20 +76,20 @@ function Auth({ onAuthSuccess }) {
             alt="BD Analytics Logo"
             className="mx-auto mb-3 w-16 h-16 object-cover rounded-2xl shadow-lg"
           />
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             {mode === 'login' ? 'Welcome back' : 'Create your account'}
           </h1>
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="mt-1 text-sm text-slate-600">
             {mode === 'login' ? 'Sign in to your personal dashboard.' : 'Register to start tracking your business.'}
           </p>
         </div>
 
         {/* Tips */}
-        <div className="mb-5 bg-dark-700/50 rounded-xl p-3 text-xs text-gray-300 border border-dark-600/50">
-          <span className="block mb-1 text-cyan-400 font-semibold">📋 Tips</span>
+        <div className="mb-5 bg-white/90 rounded-xl p-3 text-xs text-slate-700 border border-gray-200">
+          <span className="block mb-1 text-cyan-600 font-semibold">📋 Tips</span>
           <ul className="list-disc pl-4 space-y-1">
-            <li>Use a valid email format — e.g., <span className="text-gray-200">name@example.com</span></li>
-            <li>Password must be at least <span className="text-gray-200">6 characters</span> long</li>
+            <li>Use a valid email format — e.g., <span className="text-slate-700">name@example.com</span></li>
+            <li>Password must be at least <span className="text-slate-700">6 characters</span> long</li>
             {mode === 'register' && <li>Confirm password must match your password exactly</li>}
           </ul>
         </div>
@@ -100,7 +100,7 @@ function Auth({ onAuthSuccess }) {
           {/* Name field — register only */}
           {mode === 'register' && (
             <div>
-              <label className="block mb-1.5 text-sm font-medium text-gray-300">Full Name</label>
+              <label className="block mb-1.5 text-sm font-medium text-slate-700">Full Name</label>
               <div className="relative">
                 <FiUser className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
@@ -118,7 +118,7 @@ function Auth({ onAuthSuccess }) {
 
           {/* Email */}
           <div>
-            <label className="block mb-1.5 text-sm font-medium text-gray-300">Email Address</label>
+            <label className="block mb-1.5 text-sm font-medium text-slate-700">Email Address</label>
             <div className="relative">
               <FiMail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
@@ -135,7 +135,7 @@ function Auth({ onAuthSuccess }) {
 
           {/* Password */}
           <div>
-            <label className="block mb-1.5 text-sm font-medium text-gray-300">Password</label>
+            <label className="block mb-1.5 text-sm font-medium text-slate-700">Password</label>
             <div className="relative">
               <FiLock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
@@ -161,7 +161,7 @@ function Auth({ onAuthSuccess }) {
           {/* Confirm Password — register only */}
           {mode === 'register' && (
             <div>
-              <label className="block mb-1.5 text-sm font-medium text-gray-300">Confirm Password</label>
+              <label className="block mb-1.5 text-sm font-medium text-slate-700">Confirm Password</label>
               <div className="relative">
                 <FiLock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input

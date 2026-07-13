@@ -45,6 +45,7 @@ export function UploadQueueProvider({ children }) {
   const [queue, setQueue] = useState(loadQueue);
   const [status, setStatus] = useState(queue.length ? 'pending' : 'synced');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [syncVersion, setSyncVersion] = useState(0);
 
   const persistQueue = useCallback((nextQueue) => {
     setQueue(nextQueue);
@@ -90,6 +91,7 @@ export function UploadQueueProvider({ children }) {
 
     setStatus('synced');
     setIsProcessing(false);
+    setSyncVersion((current) => current + 1);
   }, [persistQueue]);
 
   useEffect(() => {
@@ -130,11 +132,12 @@ export function UploadQueueProvider({ children }) {
       pendingCount: queue.length,
       status,
       isProcessing,
+      syncVersion,
       addToQueue,
       flushQueue,
       queue,
     }),
-    [queue.length, status, isProcessing, addToQueue, flushQueue, queue],
+    [queue.length, status, isProcessing, syncVersion, addToQueue, flushQueue, queue],
   );
 
   return <UploadQueueContext.Provider value={value}>{children}</UploadQueueContext.Provider>;

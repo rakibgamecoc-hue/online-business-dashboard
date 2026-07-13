@@ -60,8 +60,8 @@ function AdsExpense() {
           <FiBarChart2 className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Ads Expense</h1>
-          <p className="text-sm text-gray-400">Track Meta & Google ad spend in BDT</p>
+          <h1 className="text-2xl font-bold text-slate-900">Ads Expense</h1>
+          <p className="text-sm text-slate-500">Track Meta & Google ad spend in BDT</p>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ function AdsExpense() {
               ) : (
                 entries.map((e) => (
                   <tr key={e._id}>
-                    <td className="text-gray-300">{new Date(e.date).toLocaleDateString('en-GB')}</td>
+                    <td className="text-slate-700">{new Date(e.date).toLocaleDateString('en-GB')}</td>
                     <td>
                       <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
                         e.platform === 'Meta'
@@ -130,7 +130,7 @@ function AdsExpense() {
                           : 'bg-red-500/20 text-red-400 border border-red-500/30'
                       }`}>{e.platform}</span>
                     </td>
-                    <td className="text-white font-semibold">৳{e.amountBDT.toLocaleString()}</td>
+                    <td className="text-slate-900 font-semibold">৳{e.amountBDT.toLocaleString()}</td>
                     <td>
                       <button onClick={() => handleDelete(e._id)} className="btn-danger flex items-center gap-1">
                         <FiTrash2 className="text-xs" /> Delete

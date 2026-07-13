@@ -68,8 +68,8 @@ function OperatingCosts() {
           <FiPackage className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Operating Costs</h1>
-          <p className="text-sm text-gray-400">Packaging materials, mobile recharge & other costs</p>
+          <h1 className="text-2xl font-bold text-slate-900">Operating Costs</h1>
+          <p className="text-sm text-slate-500">Packaging materials, mobile recharge & other costs</p>
         </div>
       </div>
 
@@ -141,7 +141,7 @@ function OperatingCosts() {
                 ) : (
                   entries.map((e) => (
                     <tr key={e._id}>
-                      <td className="text-gray-300">{new Date(e.date).toLocaleDateString('en-GB')}</td>
+                      <td className="text-slate-700">{new Date(e.date).toLocaleDateString('en-GB')}</td>
                       <td>
                         <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${categoryColors[e.category]}`}>
                           {e.category}
